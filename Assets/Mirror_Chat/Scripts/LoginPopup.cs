@@ -1,59 +1,127 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using Mirror;
 
 public class LoginPopup : MonoBehaviour
 {
-    [SerializeField] private InputField Input_NetworkAdress;    //SerializeField는 대문자로 시작하고 컴포넌트이름(약자)를 넣는것이 좋음.
-    [SerializeField] private InputField Input_UserName;
+    [Header("UI")]
+    [SerializeField] internal InputField Input_NetworkAddress;
+    [SerializeField] internal InputField Input_UserName;
 
-    [SerializeField] private Button Btn_StartAsHostServer;  //변수명 명확한 의미를 가지는 것이 좋다.
-    [SerializeField] private Button Btn_StartAsClient;
+    [SerializeField] internal Button Btn_StartAsHostServer;
+    [SerializeField] internal Button Btn_StartAsClient;
 
-    [SerializeField] private Text Text_Error;
+    [SerializeField] internal Text Text_Error;
 
-    private string _originNetworkAdress;    //전역변수 언더바 붙여서 선언함.
-    // private string m_originNetworkAdress; 회사마다 다름.
-    // private string originNetworkAddress; 지역변수는 보통 소문자로 시작함. 전역변수랑 구분하는 규칙이 있어야함.
+    [SerializeField] NetworkingManager _netManager;
+
+    public static LoginPopup Instance { get; private set; }
+
+    private string _originNetworkAddress;
 
     private void Awake()
     {
-        
+        Instance = this;
+        Text_Error.gameObject.SetActive(false);
     }
 
     private void Start()
     {
-        
+        SetDefaultNetworkAddress();
     }
 
     private void OnEnable()
     {
-        
+        //InputField의 onValueChanged이벤트가 발생할 때마다 호출될 함수를 추가한다.
+        Input_UserName.onValueChanged.AddListener(OnValueChanged_ToggleButton);
     }
 
     private void OnDisable()
     {
-        
+        Input_UserName.onValueChanged.RemoveListener(OnValueChanged_ToggleButton);
     }
 
     private void Update()
     {
-        
+        CheckNetworkAddressValidOnUpdate();
     }
 
-    public void OnClick_StartAsHost()   //OnClick에서 참조할거라서 이런 이름.
+    private void SetDefaultNetworkAddress()
     {
+        //네트워크 주소가 없는 경우, 디폴트 세팅
+        //NetworkManager.singleton.networkAddress는 주소. 클라이언트가 서버에 연결할 때 쓰는.
+        if (string.IsNullOrWhiteSpace(NetworkManager.singleton.networkAddress))
+        {
+            NetworkManager.singleton.networkAddress = "localhost";
+        }
 
+        //네트워크 주소 공란으로 변경될 경우를 대비해 기존 네트워크 주소 보관
+        _originNetworkAddress = NetworkManager.singleton.networkAddress;
+    }
+
+    // 확인한다. 네트워크 주소가 유효한지. Update()에서
+    // 로그인 팝업 네트워크 주소 변경 감지 처리
+    private void CheckNetworkAddressValidOnUpdate()
+    {
+        if (string.IsNullOrWhiteSpace(NetworkManager.singleton.networkAddress))
+        {
+            NetworkManager.singleton.networkAddress = _originNetworkAddress;
+        }
+
+        if (Input_NetworkAddress.text != NetworkManager.singleton.networkAddress)
+        {
+            Input_NetworkAddress.text = NetworkManager.singleton.networkAddress;
+        }
+    }
+
+    //클라연결이 끊겼을때, UI세팅
+    public void SetUIOnClientDisconnected()
+    {
+        //클라연결이 끊기면 로그인창이 뜬다.
+        this.gameObject.SetActive(true);
+        Input_UserName.text = string.Empty;
+        Input_UserName.ActivateInputField();
+    }
+
+    public void SetUIOnAuthValueChanged()
+    {
+        Text_Error.text = string.Empty;
+        Text_Error.gameObject.SetActive(false);
+    }
+
+    public void SetUIOnAuthError(string msg)
+    {
+        Text_Error.text = msg;
+        Text_Error.gameObject.SetActive(true);
+    }
+
+    //InputField의 onValueChanged이벤트가 발생할 때 호출될 함수이다.
+    public void OnValueChanged_ToggleButton(string userName)
+    {
+        //유저 이름 빈칸이 아닐때만 유효하도록. 유효하면 버튼이 눌려짐.
+        bool isUserNameValid = !string.IsNullOrWhiteSpace(userName);
+        Btn_StartAsHostServer.interactable = isUserNameValid;
+        Btn_StartAsClient.interactable = isUserNameValid;
+    }
+
+    public void OnClick_StartAsHost()
+    {
+        if (_netManager == null)
+            return;
+
+        _netManager.StartHost();
+        //호스트 되면 로그인창은 사라져야지
+        this.gameObject.SetActive(false);
     }
 
     public void OnClick_StartAsClient()
     {
+        if (_netManager == null)
+            return;
 
+        _netManager.StartClient();
+        //클라에서도 채팅 시작되면 로그인창 사라져야지
+        this.gameObject.SetActive(false);
     }
 
-    public void OnValueChanged_ToggleButton(string userName)
-    {
-
-    }
 }
