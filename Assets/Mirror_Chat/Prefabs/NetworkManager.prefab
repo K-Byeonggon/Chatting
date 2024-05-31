@@ -10,8 +10,8 @@ GameObject:
   m_Component:
   - component: {fileID: 2784596281550419044}
   - component: {fileID: 2999449583266685977}
-  - component: {fileID: 2356563738974385738}
   - component: {fileID: 6241870700310089981}
+  - component: {fileID: 2356563738974385738}
   m_Layer: 0
   m_Name: NetworkManager
   m_TagString: Untagged
@@ -80,28 +80,8 @@ MonoBehaviour:
   evaluationMethod: 0
   evaluationInterval: 3
   timeInterpolationGui: 0
-  _loginPopup: {fileID: 3078014351706175170, guid: 5338fc5bae82bb24ebabe891a085b35c, type: 3}
-  _chattingUI: {fileID: 3155376154968114247, guid: 0840667617d8e3847b2fa0fdb20053f5, type: 3}
---- !u!114 &2356563738974385738
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4912337374259813922}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6a5a7459bc076dd4987ee7ad06955078, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  OnServerAuthenticated:
-    m_PersistentCalls:
-      m_Calls: []
-  OnClientAuthenticated:
-    m_PersistentCalls:
-      m_Calls: []
   _loginPopup: {fileID: 0}
-  _playerName: 
+  _chattingUI: {fileID: 0}
 --- !u!114 &6241870700310089981
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -131,3 +111,23 @@ MonoBehaviour:
   debugLog: 0
   statisticsGUI: 0
   statisticsLog: 0
+--- !u!114 &2356563738974385738
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4912337374259813922}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6a5a7459bc076dd4987ee7ad06955078, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  OnServerAuthenticated:
+    m_PersistentCalls:
+      m_Calls: []
+  OnClientAuthenticated:
+    m_PersistentCalls:
+      m_Calls: []
+  _loginPopup: {fileID: 0}
+  _playerName: 

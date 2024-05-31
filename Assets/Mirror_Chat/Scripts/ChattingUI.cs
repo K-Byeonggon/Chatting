@@ -62,6 +62,11 @@ public class ChattingUI : NetworkBehaviour
     public void RemoveNameOnServerDisconnect(NetworkConnectionToClient conn)
     {
         _connectedNameDic.Remove(conn);
+        if (_connectedNameDic.Count == 0) Debug.Log("비어있음.");
+        foreach (KeyValuePair<NetworkConnectionToClient, string> kvp in _connectedNameDic)
+        {
+            Debug.Log($"Key: {kvp.Key}, Value: {kvp.Value}");
+        }
     }
 
     //서버에서 모든 클라이언트에 특정 함수를 실행시킬 수 있도록 [ClientRpc] 붙임.
