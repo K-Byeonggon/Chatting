@@ -126,7 +126,7 @@ public class ChattingUI : NetworkBehaviour
     
     public void OnValueChanged_ToggleButton(string input)
     {
-        Btn_Send.interactable = !string.IsNullOrWhiteSpace(input);
+        //Btn_Send.interactable = !string.IsNullOrWhiteSpace(input);
     }
 
     //OnEndEdit은 Enter를 눌러도 발생한다. 창을 벗어났을 때도 OnEndEdit이 발생한다.
